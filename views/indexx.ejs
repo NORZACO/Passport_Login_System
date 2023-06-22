@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+
+<head> <%- include('partials/head') %> </head>
+
+<body>
+
+  <!-- navigator  -->
+  <%- include('partials/navigator') %>
+    <%- include('partials/home-head.ejs') %>
+
+
+
+    <% if (user) { %>
+      <h2><%= user.username %></h2>
+    <% } %>
+
+
+    <%- include('partials/footer') %>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <%- include('partials/home-js.ejs') %>
+
+</body>
+
+</html>

@@ -1,0 +1,11 @@
+[
+  {
+    "id": 1,
+    "firstName": "John",
+    "lastName": "Doe",
+    "username": "johndoe",
+    "email": "johndoe@example.com",
+    "encryptedPassword": "$2b$10$.sfwBb1MbtXnM/OmIl5frOVVnoVClrQql8PtwK5iuS4R42u56.PBS",
+    "roleId": 1
+  }
+]
