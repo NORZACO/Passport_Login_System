@@ -1,38 +1,66 @@
 const express = require('express');
-var jsend = require('jsend');
+const jsend = require('jsend');
 const router = express.Router();
 const bodyParser = require('body-parser');
 const jsonParser = bodyParser.json();
-const fs = require('fs');
-const path = require('path');
-
-
-
-
+const db = 'models/users.json';
 const UserService = require('../services/UserService');
-
-const fileName = 'models/users.json';
-
-const filePath = path.resolve(__dirname, fileName);
-
-const userService = new UserService('models/users.json');
-
-
-// userService.createJsonFileIfNotExists('models/users.json')
-
-
-
-
-
-
-
-
+const userService = new UserService(db);
 router.use(jsend.middleware);
 
 
 
 
 
+// login
+router.get('/login',  async (req, res, next) => {
+  res.render('form/Login')
+});
+
+
+
+// register
+router.get('/register',  async (req, res, next) => {
+  res.render('form/register')
+});
+
+
+
+
+// GET ALL USERS
+router.get('/all',  async (req, res) => {
+  try {
+    const users = await userService.getAllUsers();
+    res.status(200).jsend.success({ 'result': users });
+  } catch (error) {
+    res.status(500).jsend.fail({ 'result': error.message });
+  }
+});
+
+
+// signup
+// router.post('/register',  async (req, res, next) => {
+//   const { firstName, lastName, username, email, password } = req.body;
+//   try {
+//     const users = await userService.createUser(firstName, lastName, username, email, password)
+//     res.redirect('login')
+//   } catch (error) {
+//     res.redirect('register')
+
+//   }
+// });
+
+
+// login
+// router.post('/login',  async (req, res, next) => {
+//   const { username, password } = req.body;
+//   try {
+//     const users = await userService.login(username, password)
+//     res.redirect('/')
+//   } catch (error) {
+//     res.redirect('/login');
+//   }
+// });
 
 
 
@@ -40,53 +68,55 @@ router.use(jsend.middleware);
 
 
 
-// const express = require('express');
-// const UserService = require('../services/UserService');
 
-// const router = express.Router();
-// const userService = new UserService('users.json');
-
-// Route: POST /users
-// Create a new user
-router.post('/', (req, res) => {
-  const { firstName, lastName, username, email, password, roleId } = req.body;
+// GET USER BY ID
+router.get('/byid/:id',  jsonParser, async (req, res) => {
+  const userId = req.params.id;
+  if (!userId) {
+    return res.status(400).jsend.fail({ 'result': 'userId is required' });
+  }
 
   try {
-    const newUser = userService.createUser(firstName, lastName, username, email, password, roleId);
-    res.status(201).json(newUser);
+    const user = await userService.getUserById(userId);
+    if (!user) {
+      return res.status(400).jsend.fail({ 'result': 'User with given id not found' });
+    }
+    return res.status(200).jsend.success({ 'result': user });
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    return res.status(500).jsend.fail({ 'result': error.message });
   }
 });
 
-// Route: GET /users
-// Get all users
-router.get('/users',  async(req, res) => {
-  const users = await userService.getAllUsers();
-  res.json(users);
+// GET ALL USERS
+router.get('/user/all',  async (req, res) => {
+  try {
+    const users = await userService.getAllUsers();
+    res.status(200).jsend.success({ 'result': users });
+  } catch (error) {
+    res.status(500).jsend.fail({ 'result': error.message });
+  }
 });
 
-// Route: GET /users/:id
-// Get user by ID
-router.get('/users/:id', (req, res) => {
+// UPDATE USER
+router.put('/byid/:id',  jsonParser, async (req, res) => {
   const userId = req.params.id;
-  const user = userService.getUserById(userId);
+  if (!userId) {
+    return res.status(400).jsend.fail({ 'result': 'userId is required' });
+  }
 
-  if (user) {
-    res.json(user);
-  } else {
-    res.status(404).json({ message: 'User not found' });
+  try {
+    const { username, email, password } = req.body;
+    const user = await userService.updateUser(userId, username, email, password);
+    if (!user) {
+      return res.status(400).jsend.fail({ 'result': 'User with given id not found' });
+    }
+    return res.status(200).jsend.success({ 'result': user });
+  } catch (error) {
+    return res.status(500).jsend.fail({ 'result': error.message });
   }
 });
-
-
-
-// ... other user routes
 
 module.exports = router;
-
-
-
 
 
 
