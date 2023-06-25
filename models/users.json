@@ -1,11 +1,11 @@
 [
   {
-    "id": "082a12885ab",
+    "id": "53262b981de",
     "firstName": "Mwamuzi",
     "lastName": "Shadrick",
-    "username": "johndoe@example.com",
+    "username": "admin",
     "email": "serviceikt354@gmail.com",
-    "encryptedPassword": "$2b$10$fBH1qwmY0SlIlVilXteDZeq5fDeTL.fVi3RnZLmNmNxle5qu08Wjm",
+    "encryptedPassword": "$2b$10$PRTQ7774wdqvJoHVB6.W8.1iV.SRmQPu4T1/n2hFhgrhr1OJkWY3a",
     "roleId": "Member"
   }
 ]

@@ -6,11 +6,14 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const flash = require('express-flash');
 
+var passport = require('passport');
+var session = require('express-session');
+var SQLiteStore = require('connect-sqlite3')(session);
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const authRouter = require('./routes/auth');
-const sessionRouter = require("./session/index");
+// const sessionRouter = require("./session/index");
 
 const app = express();
 
@@ -25,10 +28,32 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // session
-app.use(sessionRouter);
+// router.use(session({
+//   secret: process.env.SESSION_SECRET_KEY,
+//   resave: false,
+//   saveUninitialized: false
+// }));
+
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET_KEY,
+    resave: false,
+    saveUninitialized: false,
+    store: new SQLiteStore({ db: 'sessions.db', dir: './session/db' }),
+  })
+);
 
 
+app.use(passport.authenticate('session'));
 
+
+app.use(function (req, res, next) {
+  var msgs = req.session.messages || [];
+  res.locals.messages = msgs;
+  res.locals.hasMessages = !!msgs.length;
+  req.session.messages = [];
+  next();
+});
 
 
 // bootstrap  <script src="bootstrap/js/bootstrap.bundle.min.js"></script> || bootstrap@4.0.0/dist/js/
@@ -52,33 +77,24 @@ app.use('/bootstrap-icons', express.static(path.join(__dirname, 'node_modules/bo
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 app.use('/', indexRouter);
 app.use('/', usersRouter);
 app.use('/', authRouter);
 
+
+
+
+
+
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   next(createError(404));
 });
 
 
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};

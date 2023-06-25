@@ -46,27 +46,31 @@ class UserService {
         }
     };
 
+
+
     async createUser(id, firstName, lastName, username, email, password) {
         try {
-            // const existingUser = this.users.find(user => user.username === username);
-            // if (existingUser) {
-            //     throw new Error('User with the given username already exists');
-            // }
-
-            // const emailCount = this.users.filter(user => user.email === email).length;
-            // if (emailCount > 4) {
-            //     throw new Error('Email cannot be used by more than 4 users');
-            // }
-
-            const saltRounds = 10;
-            const encryptedPassword = bcrypt.hashSync(password, saltRounds);
-            // id = uid()
-            const newUser = { id, firstName, lastName, username, email, encryptedPassword, roleId: 'Member' };
-            
-            const existingUser = this.users.find(user => user.username === username);
+            const existingUser = this.users.find((user) => user.username === username);
             if (existingUser) {
                 throw new Error('User with the given username already exists');
             }
+
+            const emailCount = this.users.filter((user) => user.email === email).length;
+            if (emailCount > 4) {
+                throw new Error('Email cannot be used by more than 4 users');
+            }
+
+            const saltRounds = 10;
+            const encryptedPassword = bcrypt.hashSync(password, saltRounds);
+            const newUser = {
+                id,
+                firstName,
+                lastName,
+                username,
+                email,
+                encryptedPassword,
+                roleId: 'Member',
+            };
 
             this.users.push(newUser);
             this.saveData();
@@ -128,10 +132,10 @@ class UserService {
         return foundUser ? { userid: foundUser.id, username: foundUser.username, email: foundUser.email } : null;
     }
 
-    
-    async getUserById(userId) {
-        const foundUser = this.users.find(user => user.id === userId);
-        return foundUser ? { userid: foundUser.id, username: foundUser.username, email: foundUser.email } : null;
+
+    async getUserData(Email) {
+        const foundUser = this.users.find(user => user.email === Email);
+        return foundUser ? { userid: foundUser.id, username: foundUser.username, email: foundUser.email, hashPassword: foundUser.encryptedPassword } : null;
     }
 
     async updateUser(userId, username, email, encryptedPassword) {

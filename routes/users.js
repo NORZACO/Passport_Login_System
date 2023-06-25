@@ -14,14 +14,17 @@ router.use(jsend.middleware);
 
 // login
 router.get('/login',  async (req, res, next) => {
-  res.render('form/Login')
+  const context = { title: 'Express', user :  req.username }
+  res.render('form/Login', context);
 });
 
 
 
 // register
 router.get('/register',  async (req, res, next) => {
-  res.render('form/register')
+  const context = { title: 'Express', user :  req.username }
+
+  res.render('form/register', {user : req.username || null });
 });
 
 
@@ -36,6 +39,7 @@ router.get('/all',  async (req, res) => {
     res.status(500).jsend.fail({ 'result': error.message });
   }
 });
+
 
 
 // signup

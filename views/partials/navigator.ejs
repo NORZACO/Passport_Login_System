@@ -12,8 +12,10 @@
     <a class="py-2 d-none d-md-inline-block text-white bg-dark" href="/cart"> <i class="bi bi-cart4"></i> </a>
     <a class="py-2 d-none d-md-inline-block text-white bg-dark" href="#">Pricing</a>
 
-    <a class="py-2 d-none d-md-inline-block text-white bg-dark" href="#"> </a>
-
+    <% if (user) { %>
+      <a class="py-2 d-none d-md-inline-block text-white bg-dark" href="#"> hello <%- user.username  %> </a>
+    <% } %>
+    
 
 
     <!-- <a class="py-2 d-none d-md-inline-block text-white bg-dark" href="/minside"> <i class="bi bi-person-circle"></i> </a> -->
@@ -37,20 +39,24 @@
       </ul>
     </div>
 
-    <a class="py-2 d-none d-md-inline-block text-white bg-dark" href="/login"> <i class="bi bi-box-arrow-in-right"></i> </a>
-    <a class="py-2 d-none d-md-inline-block text-white bg-dark" href="/register"> <i class="bi bi-box-arrow-in-left"></i> </a>
 
+
+    <!-- <a class="py-2 d-none d-md-inline-block text-white bg-dark" href="/login"> <i class="bi bi-box-arrow-in-right"></i> </a>
+    <a class="py-2 d-none d-md-inline-block text-white bg-dark" href="/register"> <i class="bi bi-box-arrow-in-left"></i> </a> -->
     <% if (user) { %>
       <!-- User is logged in -->
-      <a class="py-2 d-none d-md-inline-block text-white bg-dark" href="/logout">
-        <i class="bi bi-box-arrow-in-right"></i> Logout
-      </a>
+      <form method="POST" action="/logout">
+        <button type="submit" class="py-2 d-none d-md-inline-block text-white bg-dark" style="border: none; background: none; cursor: pointer;">
+          <i class="bi bi-box-arrow-in-right"></i> Logout
+        </button>
+      </form>
     <% } else { %>
       <!-- User is not logged in -->
       <a class="py-2 d-none d-md-inline-block text-white bg-dark" href="/register">
         <i class="bi bi-box-arrow-in-left"></i> Register
       </a>
     <% } %>
+    
     
 
 

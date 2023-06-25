@@ -20,6 +20,14 @@
       <div class="container-sm">
 
         <h2>Signup Form</h2>
+
+        <% if (messages.error) { %>
+          <p style="color: rgb(0, 0, 0)">
+             <%= messages.error %>
+          </p>
+         <% } %>
+
+
         <form action="/register" method="post">
 
 
