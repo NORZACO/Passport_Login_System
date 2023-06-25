@@ -6,14 +6,14 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const flash = require('express-flash');
 
-var passport = require('passport');
+const passport = require('passport');
 var session = require('express-session');
 var SQLiteStore = require('connect-sqlite3')(session);
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const authRouter = require('./routes/auth');
-// const sessionRouter = require("./session/index");
+const settingsRouter = require('./routes/settings');
 
 const app = express();
 
@@ -47,13 +47,13 @@ app.use(
 app.use(passport.authenticate('session'));
 
 
-app.use(function (req, res, next) {
-  var msgs = req.session.messages || [];
-  res.locals.messages = msgs;
-  res.locals.hasMessages = !!msgs.length;
-  req.session.messages = [];
-  next();
-});
+// app.use(function (req, res, next) {
+//   var msgs = req.session.messages || [];
+//   res.locals.messages = msgs;
+//   res.locals.hasMessages = !!msgs.length;
+//   req.session.messages = [];
+//   next();
+// });
 
 
 // bootstrap  <script src="bootstrap/js/bootstrap.bundle.min.js"></script> || bootstrap@4.0.0/dist/js/
@@ -80,6 +80,7 @@ app.use('/bootstrap-icons', express.static(path.join(__dirname, 'node_modules/bo
 app.use('/', indexRouter);
 app.use('/', usersRouter);
 app.use('/', authRouter);
+app.use('/', settingsRouter);
 
 
 

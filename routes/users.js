@@ -11,25 +11,6 @@ router.use(jsend.middleware);
 
 
 
-
-// login
-router.get('/login',  async (req, res, next) => {
-  const context = { title: 'Express', user :  req.username }
-  res.render('form/Login', context);
-});
-
-
-
-// register
-router.get('/register',  async (req, res, next) => {
-  const context = { title: 'Express', user :  req.username }
-
-  res.render('form/register', {user : req.username || null });
-});
-
-
-
-
 // GET ALL USERS
 router.get('/all',  async (req, res) => {
   try {
@@ -41,35 +22,17 @@ router.get('/all',  async (req, res) => {
 });
 
 
+// function heavyComputation(){
+// 	let temp = 0;
+// 	for(let i=0; i<100000; i++)
+// 		temp = (Math.random()*5342)%i;
+// 	return 123;
+// }
 
-// signup
-// router.post('/register',  async (req, res, next) => {
-//   const { firstName, lastName, username, email, password } = req.body;
-//   try {
-//     const users = await userService.createUser(firstName, lastName, username, email, password)
-//     res.redirect('login')
-//   } catch (error) {
-//     res.redirect('register')
-
-//   }
-// });
-
-
-// login
-// router.post('/login',  async (req, res, next) => {
-//   const { username, password } = req.body;
-//   try {
-//     const users = await userService.login(username, password)
-//     res.redirect('/')
-//   } catch (error) {
-//     res.redirect('/login');
-//   }
-// });
-
-
-
-
-
+// router.get('/api', (req, res)=>{
+// 	let result = heavyComputation();
+// 	res.send("Result: "+result);
+// })
 
 
 
@@ -108,6 +71,7 @@ router.put('/byid/:id',  jsonParser, async (req, res) => {
     return res.status(400).jsend.fail({ 'result': 'userId is required' });
   }
 
+
   try {
     const { username, email, password } = req.body;
     const user = await userService.updateUser(userId, username, email, password);
@@ -119,6 +83,39 @@ router.put('/byid/:id',  jsonParser, async (req, res) => {
     return res.status(500).jsend.fail({ 'result': error.message });
   }
 });
+
+
+
+// minside router
+router.get('minside',  jsonParser, async (req, res) => {
+
+  try {
+    const user = await userService.getUserById(req.user.id);
+    if (!user) {
+      return res.status(400).jsend.fail({ 'result': 'User with given id not found' });
+    }
+    return res.status(200).jsend.success({ 'result': user });
+
+  } catch (error) {
+    return res.status(500).jsend.fail({ 'result': error.message });
+  }
+});
+
+
+router.get('/minside', async (req, res, next) => {
+  const user = await userService.getUserById(req.user.id);
+  // if (!user) {
+  //   return res.status(400).jsend.fail({ 'result': 'User with given id not found' });
+  // }
+
+  const context =  { user: user };
+  return res.render('admin/dashboard', context)
+});
+
+
+
+
+
 
 module.exports = router;
 

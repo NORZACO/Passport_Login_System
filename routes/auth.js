@@ -13,20 +13,20 @@ const LocalStrategy = require('passport-local');
 const bcrypt = require('bcrypt');
 router.use(jsend.middleware);
 
-function checkAuthenticated(req, res, next) {
-    if (req.isAuthenticated()) {
-        return next();
-    }
+// function checkAuthenticated(req, res, next) {
+//     if (req.isAuthenticated()) {
+//         return next();
+//     }
 
-    res.redirect('/login');
-}
+//     res.redirect('/login');
+// }
 
-function checkNotAuthenticated(req, res, next) {
-    if (req.isAuthenticated()) {
-        return res.redirect('/');
-    }
-    next();
-}
+// function checkNotAuthenticated(req, res, next) {
+//     if (req.isAuthenticated()) {
+//         return res.redirect('/');
+//     }
+//     next();
+// }
 
 passport.use(
     new LocalStrategy(
@@ -53,20 +53,20 @@ passport.use(
 );
 
 
-router.get('/login',  async (req, res, next) => {
-    const context = { title: 'Express', user :  req.username }
+router.get('/login', async (req, res, next) => {
+    const context = { title: 'Express', user: req.username }
     res.render('form/Login', context);
-  });
-  
-  
-  
-  // register
-  router.get('/register',  async (req, res, next) => {
-    const context = { title: 'Express', user :  req.username }
-  
-    res.render('form/register', {user : req.username || null });
-  });
-  
+});
+
+
+
+// register
+router.get('/register', async (req, res, next) => {
+    const context = { title: 'Express', user: req.username }
+
+    res.render('form/register', { user: req.username || null });
+});
+
 
 
 passport.serializeUser(function (user, cb) {
